@@ -187,6 +187,7 @@ return [
     'Select trait alias...' => 'Sélectionnez l\'alias du trait',
     'Select type...' => 'Sélectionez le type',
     'Select unit alias...' => 'Sélectionnez l\'alias de l\'unité',
+    'selected' => 'sélectionné(s)',
     'Sensor Position' => 'Position du Capteur',
     'Sensor Profile' => 'Profil du Capteur',
     'Serial Number' => 'Numéro de Série',

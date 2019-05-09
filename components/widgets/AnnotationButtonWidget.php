@@ -36,22 +36,6 @@ class AnnotationButtonWidget extends Widget {
     public $asLink = false;
     const AS_LINK = "asLink";
 
-    public function init() {
-        parent::init();
-        // must be not null
-        if ($this->targets === null) {
-           throw new \Exception("Targets aren't set");
-        }
-         // must be an array
-        if (!is_array($this->targets)) {
-          throw new \Exception("Targets list is not an array");
-        }
-         // must contains at least one element
-        if (empty($this->targets)) {
-            throw new \Exception("Targets list is empty");
-        }
-    }
-
     /**
      * Render the annotation button
      * @return string the string rendered

@@ -30,7 +30,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= Html::a(Yii::t('yii', 'Create'), ['create'], ['class' => 'btn btn-success']) ?>
         <?= Html::a(Yii::t('yii', 'Update'), ['update'], ['class' => 'btn btn-primary']) ?>
         <?= Html::a(Icon::show('download-alt', [], Icon::BSG) . " " . Yii::t('yii', 'Download Search Result'), ['download-csv', 'model' => $searchModel], ['class' => 'btn btn-primary']) ?>
-        <?= $this->render( '@app/components/widgets/actionsOnSelection/assets/views/_count', ['param'=> $some_var] ); ?>
+        <?= $this->render( '@app/components/widgets/actionsOnSelection/assets/views/_count', ['param'=> $some_var] ); ?>            
     </div>
     
    <?= GridView::widget([
