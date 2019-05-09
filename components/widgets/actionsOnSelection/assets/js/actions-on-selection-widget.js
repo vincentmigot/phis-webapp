@@ -9,13 +9,13 @@ var selectionCountAlertDiv;
 var checkboxes;
     
 function displaySelectedCount (count) {
-    $('#selection-count-value').html(count);
+    $('#' + selectionCountValueId).html(count);
     selectionCountAlertDiv.show();
 }
 
 window.onload = function() {
     var checkedCount = $("input[type='checkbox']:checked").length;
-    selectionCountAlertDiv = $("#selection-count-alert");
+    selectionCountAlertDiv = $("#" + selectionCountAlertId);
     checkboxes = $("input[type='checkbox']");
     selectionCountAlertDiv.hide();
     selectionCountAlertDiv.on('close.bs.alert', function() {
@@ -27,7 +27,7 @@ window.onload = function() {
     });
     checkboxes.change(function() {
         checkedCount = $("input[type='checkbox']:checked").length;
-        $('#selection-count-value').html(checkedCount);
+        $('#' + selectionCountValueId).html(checkedCount);
         if ($(this).is(':checked')) {
             displaySelectedCount(checkedCount);
         } 
