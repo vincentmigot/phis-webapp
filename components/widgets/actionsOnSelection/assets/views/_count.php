@@ -11,6 +11,7 @@
  * Selection count view.
  */
 ?>
-<div id="selection-count-alert" class="alert alert-info" style="display: inline-block; padding:6px; margin:0px; vertical-align: middle;">
+<div id="selection-count-alert" class="alert alert-info alert-dismissible" style="display: inline-block; padding:6px; padding-left: 21px;padding-right: 21px; margin:0px; vertical-align: middle;">
     <span id="selection-count-value"></span> selected
+    <button type="button" class="close" data-dismiss="alert" style="right: -15px">&times;</button>
 </div>
