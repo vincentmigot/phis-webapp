@@ -11,10 +11,13 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 use app\components\widgets\AnnotationButtonWidget;
 use app\components\widgets\EventButtonWidget;
+use app\components\widgets\actionsOnSelection\ActionsOnSelectionWidgetAsset;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\ScientificObjectSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
+
+ActionsOnSelectionWidgetAsset::register($this);
 
 $this->title = Yii::t('app', '{n, plural, =1{Scientific Object} other{Scientific Objects}}', ['n' => 2]);
 $this->params['breadcrumbs'][] = $this->title;
@@ -23,13 +26,12 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="scientific-object-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
-    <?php //echo $this->render('_search', ['model' => $searchModel]); ?>
-
-    <p>
+    <div>
         <?= Html::a(Yii::t('yii', 'Create'), ['create'], ['class' => 'btn btn-success']) ?>
         <?= Html::a(Yii::t('yii', 'Update'), ['update'], ['class' => 'btn btn-primary']) ?>
         <?= Html::a(Icon::show('download-alt', [], Icon::BSG) . " " . Yii::t('yii', 'Download Search Result'), ['download-csv', 'model' => $searchModel], ['class' => 'btn btn-primary']) ?>
-    </p>
+        <?= $this->render( '@app/components/widgets/actionsOnSelection/assets/views/_count', ['param'=> $some_var] ); ?>
+    </div>
     
    <?= GridView::widget([
         'dataProvider' => $dataProvider,
