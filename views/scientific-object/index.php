@@ -1,13 +1,11 @@
 <?php
 //**********************************************************************************************
-//                                       index.php 
-//
+//                                       index.php
 // SILEX-PHIS
 // Copyright © INRA 2017
 // Creation date: October 2017
 // Contact: morgane.vidal@inra.fr, anne.tireau@inra.fr, pascal.neveu@inra.fr
 //***********************************************************************************************
-
 use kartik\icons\Icon;
 use yii\helpers\Html;
 use yii\grid\GridView;
@@ -37,6 +35,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
+            ['class' => 'yii\grid\CheckboxColumn'],
             ['class' => 'yii\grid\SerialColumn'],
             [
               'attribute' => 'uri',
