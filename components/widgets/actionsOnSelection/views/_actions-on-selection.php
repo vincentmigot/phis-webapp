@@ -1,6 +1,6 @@
 <?php
 //******************************************************************************
-//                                 _count.php 
+//                         _actions-on-selection.php 
 // PHIS-SILEX
 // Copyright © INRA 2017
 // Creation date: May 2019
@@ -14,7 +14,7 @@ use app\components\widgets\AnnotationButtonWidget;
  * Selection count view.
  */
 ?>
-<div id="selection-count-alert" class="alert alert-info alert-dismissible" style="display: inline-block; padding:6px; padding-left: 21px;padding-right: 21px; margin:0px; vertical-align: middle;">
+<div id="selection-count-alert" class="alert alert-info alert-dismissible">
     <span id="selection-count-value"></span> <?= Yii::t("app", "selected"); ?>
     <?= EventButtonWidget::widget([
             EventButtonWidget::AS_LINK => true
