@@ -5,10 +5,18 @@
 // Creation date: 5 May 2019
 // Contact: andreas.garcia@inra.fr, anne.tireau@inra.fr, pascal.neveu@inra.fr
 //******************************************************************************
+var selectionCountAlertDiv;
+var checkboxes;
+    
+function displaySelectedCount (count) {
+    $('#selection-count-value').html(count);
+    selectionCountAlertDiv.show();
+}
 
 window.onload = function() {
-    var selectionCountAlertDiv = $("#selection-count-alert");
-    var checkboxes = $("input[type='checkbox']");
+    var checkedCount = $("input[type='checkbox']:checked").length;
+    selectionCountAlertDiv = $("#selection-count-alert");
+    checkboxes = $("input[type='checkbox']");
     selectionCountAlertDiv.hide();
     selectionCountAlertDiv.on('close.bs.alert', function() {
         checkboxes.each(function(i) {
@@ -18,10 +26,10 @@ window.onload = function() {
         return false;
     });
     checkboxes.change(function() {
-        var checkedCount = $("input[type='checkbox']:checked").length;
+        checkedCount = $("input[type='checkbox']:checked").length;
         $('#selection-count-value').html(checkedCount);
         if ($(this).is(':checked')) {
-            selectionCountAlertDiv.show();
+            displaySelectedCount(checkedCount);
         } 
         else {
             if(checkedCount === 0) {
@@ -29,6 +37,9 @@ window.onload = function() {
             }
         }
     });
+    if($("input[type='checkbox']:checked").length > 0) {
+        displaySelectedCount(checkedCount);
+    }
 };
 
 
