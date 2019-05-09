@@ -21,6 +21,7 @@ class ActionsOnSelectionWidgetAsset extends AssetBundle {
     ];
 
     public $css = [
+        'css/actions-on-selection-widget.css'
     ];
 
     public $depends = [
