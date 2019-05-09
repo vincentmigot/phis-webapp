@@ -11,3 +11,7 @@
     margin:0px;
     vertical-align: middle;
 }
+
+#selection-count-alert .close{
+    right: -15px;
+}

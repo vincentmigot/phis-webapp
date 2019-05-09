@@ -22,5 +22,5 @@ use app\components\widgets\AnnotationButtonWidget;
     <?= AnnotationButtonWidget::widget([
             AnnotationButtonWidget::AS_LINK => true
         ]); ?>
-    <button type="button" class="close" data-dismiss="alert" style="right: -15px">&times;</button>
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
 </div>
