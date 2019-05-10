@@ -13,35 +13,34 @@ use yii\base\Widget;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use kartik\icons\Icon;
-use app\controllers\EventController;
 
 /**
- * A widget used to generate an event button
+ * A widget used to generate an event button.
  * @author Andréas Garcia <andreas.garcia@inra.fr>
  */
 class EventButtonWidget extends Widget {
 
-    CONST ADD_EVENT_LABEL = 'Add event';
-    CONST CONCERNED_ITEMS_NOT_SET_LABEL = 'The concerned items are not set';
-    CONST CONCERNED_ITEM_LIST_NOT_A_ARRAY = 'The concerned items list is not an array';
-    CONST CONCERNED_ITEM_LIST_EMPTY = 'The concerned items list is empty';
+    const ADD_EVENT_LABEL = 'Add event';
+    const CONCERNED_ITEMS_NOT_SET_LABEL = 'The concerned items are not set';
+    const CONCERNED_ITEM_LIST_NOT_A_ARRAY = 'The concerned items list is not an array';
+    const CONCERNED_ITEM_LIST_EMPTY = 'The concerned items list is empty';
         
     /**
-     * Define if button is displayed as a button (false) or as a link (true)
+     * Defines if button is displayed as a button (false) or as a link (true)
      * @var boolean
      */    
     public $asLink = false;
     const AS_LINK = "asLink";
            
     /**
-     * Define the items which will be annoted
+     * Defines the items which will be annotated.
      * @var array
      */
     public $concernedItemsUris;
     const CONCERNED_ITEMS_URIS = "concernedItemsUris";
 
     /**
-     * Render the event button
+     * Renders the event button.
      * @return string the string rendered
      */
     public function run() {
@@ -62,6 +61,7 @@ class EventButtonWidget extends Widget {
             $linkLabel = '<span class="fa fa-flag"></span>';
         }
         $linkAttributes["title"] = Yii::t('app', self::ADD_EVENT_LABEL);
+        $linkAttributes["id"] = $this->id;
                 
         return Html::a(
                     $linkLabel,
