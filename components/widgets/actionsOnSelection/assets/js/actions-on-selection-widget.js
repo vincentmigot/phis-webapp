@@ -7,6 +7,9 @@
 //******************************************************************************
 var selectionCountAlertDiv;
 var checkboxes;
+var checkedCount;
+var checkedSelector = "input[type='checkbox']:checked";
+var tableId = "w0";
     
 function displaySelectedCount (count) {
     $('#' + selectionCountValueId).html(count);
@@ -14,10 +17,10 @@ function displaySelectedCount (count) {
 }
 
 window.onload = function() {
-    var checkedCount = $("input[type='checkbox']:checked").length;
     selectionCountAlertDiv = $("#" + selectionCountAlertId);
     checkboxes = $("input[type='checkbox']");
-    selectionCountAlertDiv.hide();
+    selectionEventButton = $("#" + selectionEventButtonId);
+    
     selectionCountAlertDiv.on('close.bs.alert', function() {
         checkboxes.each(function(i) {
             $(this).prop("checked", false);
@@ -25,8 +28,9 @@ window.onload = function() {
         $(this).hide();
         return false;
     });
+    
     checkboxes.change(function() {
-        checkedCount = $("input[type='checkbox']:checked").length;
+        checkedCount = $(checkedSelector).length;
         $('#' + selectionCountValueId).html(checkedCount);
         if ($(this).is(':checked')) {
             displaySelectedCount(checkedCount);
@@ -37,9 +41,33 @@ window.onload = function() {
             }
         }
     });
-    if($("input[type='checkbox']:checked").length > 0) {
+    
+    checkedCount = $(checkedSelector).length;
+    if(checkedCount > 0) {
         displaySelectedCount(checkedCount);
     }
+    else {
+        selectionCountAlertDiv.hide();
+    }
+    
+    var columnNumberWhoseValueIsToSendToActions;
+    $("#" + tableId  + " th").each(function(index) {
+        if($(this).html() === columnNameToSendToActions) {
+            columnNumberWhoseValueIsToSendToActions = index;
+        }
+    });
+    alert("e " + $("#" + tableId  + " th").length);
+    alert(columnNumberWhoseValueIsToSendToActions);
+    
+    selectionEventButton.click(function() {
+        var concernedItemsUris;
+        alert($('#' + tableId).yiiGridView('getSelectedRows'));
+        
+//        $(checkedSelector).each(function (index) {
+//            concernedItemsUris.push($(this).) = 
+//        });
+        return false;
+    });
 };
 
 
