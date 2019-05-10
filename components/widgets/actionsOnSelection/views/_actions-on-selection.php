@@ -14,10 +14,11 @@ use app\components\widgets\AnnotationButtonWidget;
  * Selection count view.
  */
 ?>
-<div id="selection-count-alert" class="alert alert-info alert-dismissible">
-    <span id="selection-count-value"></span> <?= Yii::t("app", "selected"); ?>
+<div id="<?= $selectionCountAlertId ?>" class="alert alert-info alert-dismissible">
+    <span id="<?= $selectionCountValueId ?>"></span> <?= Yii::t("app", "selected"); ?>
     <?= EventButtonWidget::widget([
-            EventButtonWidget::AS_LINK => true
+            EventButtonWidget::AS_LINK => true,
+            'id' => $selectionEventButtonId
         ]); ?>
     <?= AnnotationButtonWidget::widget([
             AnnotationButtonWidget::AS_LINK => true
