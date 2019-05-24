@@ -25,4 +25,31 @@ class WSDataModel extends\openSILEX\guzzleClientPHP\WSModel {
     public function __construct() {
         parent::__construct(WS_PHIS_PATH, "data");
     }
+    
+    public function getAllData($sessionToken, $params) {
+        $params[WSConstants::PAGE] = 0;
+        $params[WSConstants::PAGE_SIZE] = 1000;
+        $params["dateSortAsc"] = "true";
+        $dataResult = $this->get($sessionToken, "", $params);
+        
+        $result = [];
+        if (isset($dataResult->{WSConstants::RESULT}->{WSConstants::DATA})) {
+            $result = $dataResult->{WSConstants::RESULT}->{WSConstants::DATA};
+        }
+        
+        if (isset($dataResult->{WSConstants::METADATA}->{WSConstants::PAGINATION}) && isset($dataResult->{WSConstants::METADATA}->{WSConstants::PAGINATION}->{WSConstants::TOTAL_COUNT}) && $dataResult->{WSConstants::METADATA}->{WSConstants::PAGINATION}->{WSConstants::TOTAL_COUNT} > 0) {
+
+            $totalPages = $dataResult->{WSConstants::METADATA}->{WSConstants::PAGINATION}->{WSConstants::TOTAL_PAGES};
+
+            for ($currentPage = 1; $currentPage < $totalPages; $currentPage++) {
+                $params[WSConstants::PAGE] = $currentPage;
+                $dataResult = $this->get($sessionToken, "", $params);
+                
+                $result = array_merge($result, $dataResult->{WSConstants::RESULT}->{WSConstants::DATA});
+            }
+            
+        }
+        
+        return $result;
+    }
 }

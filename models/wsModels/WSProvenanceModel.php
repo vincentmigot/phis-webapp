@@ -68,9 +68,12 @@ class WSProvenanceModel extends WSModel {
             WSConstants::PAGE_SIZE => $pageSize
         ]);
 
-        if (isset($provenanceResult->{WSConstants::METADATA}->{WSConstants::PAGINATION}) && isset($provenanceResult->{WSConstants::METADATA}->{WSConstants::PAGINATION}->{WSConstants::TOTAL_COUNT}) && $provenanceResult->{WSConstants::METADATA}->{WSConstants::PAGINATION}->{WSConstants::TOTAL_COUNT} > 0) {
-
+        $result = [];
+        if (isset($provenanceResult->{WSConstants::RESULT}->{WSConstants::DATA})) {
             $result = $provenanceResult->{WSConstants::RESULT}->{WSConstants::DATA};
+        }
+        
+        if (isset($provenanceResult->{WSConstants::METADATA}->{WSConstants::PAGINATION}) && isset($provenanceResult->{WSConstants::METADATA}->{WSConstants::PAGINATION}->{WSConstants::TOTAL_COUNT}) && $provenanceResult->{WSConstants::METADATA}->{WSConstants::PAGINATION}->{WSConstants::TOTAL_COUNT} > 0) {
 
             $totalPages = $provenanceResult->{WSConstants::METADATA}->{WSConstants::PAGINATION}->{WSConstants::TOTAL_PAGES};
 
@@ -83,10 +86,9 @@ class WSProvenanceModel extends WSModel {
                 $result = array_merge($result, $provenanceResult->{WSConstants::RESULT}->{WSConstants::DATA});
             }
             
-            return $result;
-        } else {
-            return [];
         }
+        
+        return $result;
     }
 
 }

@@ -50,4 +50,8 @@ class WSScientificObjectModel extends \openSILEX\guzzleClientPHP\WSModel {
         }
         return $requestRes;
     }
+    
+    public function getLabelsByUri($sessionToken, $uris = []) {
+        return $this->post($sessionToken, "/labels", $uris);
+    }
 }

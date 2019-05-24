@@ -168,7 +168,8 @@ class ExperimentController extends Controller {
         
         //7. Get all sensors
         $sensorModel = new YiiSensorModel();
-        $sensors = $sensorModel->getAllSensorsUrisAndLabels(Yii::$app->session[WSConstants::ACCESS_TOKEN]);
+//        $sensors = $sensorModel->getAllSensorsUrisAndLabels(Yii::$app->session[WSConstants::ACCESS_TOKEN]);
+        $sensors = [];
         
         if ($res === WSConstants::TOKEN) {
             return $this->redirect(Yii::$app->urlManager->createUrl("site/login"));
@@ -403,5 +404,44 @@ class ExperimentController extends Controller {
         $res = $experimentModel->updateSensors($sessionToken, $experimentUri, $sensorsUris);
         
         return json_encode($res, JSON_UNESCAPED_SLASHES);
+    }
+    
+    public function actionGetProvenances($experiment, $variable) {
+        $ws = new \app\models\wsModels\WSExperimentModel();
+        $sessionToken = Yii::$app->session['access_token'];
+        $r = $ws->getProvenances($sessionToken, $experiment, $variable);
+        
+        return json_encode($r->result->data);
+    }
+    
+    public function actionGetVariableGraph() {
+        $ws = new \app\models\wsModels\WSDataModel();
+        $sessionToken = Yii::$app->session['access_token'];
+        $dataResults = $ws->getAllData($sessionToken, $_POST);
+        
+        $series = [];
+        foreach ($dataResults as $data) {
+            if (!array_key_exists($data->objectUri, $series)) {
+                $serie = [
+                    "name" => $data->objectUri,
+                    "data" => []
+                ];
+                $series[$data->objectUri] = $serie;
+            }
+            $series[$data->objectUri]['data'][] = [(strtotime($data->date))*1000, doubleval($data->value)];
+        }
+        $ws2 = new \app\models\wsModels\WSScientificObjectModel();
+        $uriLabelsResult = $ws2->getLabelsByUri($sessionToken, array_keys($series));
+        if (isset($uriLabelsResult->{WSConstants::RESULT}->{WSConstants::DATA})) {
+            $uriLabels = $uriLabelsResult->{WSConstants::RESULT}->{WSConstants::DATA};
+            foreach ($uriLabels as $uriLabel) {
+                $series[$uriLabel->uri]["name"] = $uriLabel->label;
+            }
+        }
+        
+        return $this->renderAjax('_view_variable_graph', [
+            'series' => array_values($series),
+            'graphName' => $_POST["variable"]
+        ]);
     }
 }

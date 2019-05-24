@@ -92,4 +92,15 @@ class WSExperimentModel extends \openSILEX\guzzleClientPHP\WSModel {
             return $requestRes;
         }
     }
+    
+    public function getProvenances($sessionToken, $experimentUri, $variableUri) {
+        $subService = "/" . urlencode($experimentUri) . "/provenances/" . urlencode($variableUri);
+        $requestRes = $this->get($sessionToken, $subService, []);
+
+        if (isset($requestRes->{WSConstants::TOKEN_INVALID})) {
+            return WEB_SERVICE_TOKEN;
+        } else {
+            return $requestRes;
+        }
+    }
 }

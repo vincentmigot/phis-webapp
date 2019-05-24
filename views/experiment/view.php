@@ -1,4 +1,5 @@
 <?php
+
 //******************************************************************************
 //                                   view.php
 // SILEX-PHIS
@@ -17,8 +18,9 @@ use app\components\widgets\event\EventGridViewWidget;
 use app\controllers\ExperimentController;
 use app\components\widgets\LinkObjectsWidget;
 use app\models\yiiModels\YiiDocumentModel;
+use \kartik\select2\Select2;
 
-/** 
+/**
  * Implements the view page for an Experiment
  * @update [Arnaud Charleroy] 23 august, 2018 (add annotation functionality)
  * @update [Andréas Garcia] 15 Jan., 2019: change "concern" occurences to "concernedItem"
@@ -26,7 +28,6 @@ use app\models\yiiModels\YiiDocumentModel;
  * @var $this yii\web\View
  * @var $model app\models\YiiExperimentModel 
  */
-
 $this->title = $model->alias;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', '{n, plural, =1{Experiment} other{Experiments}}', ['n' => 2]), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
@@ -36,27 +37,29 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?php
-        if (Yii::$app->session['isAdmin'] || $this->params['canUpdate']) { ?>
+        <?php if (Yii::$app->session['isAdmin'] || $this->params['canUpdate']) { ?>
             <?= Html::a(Yii::t('app', 'Update'), ['update', 'id' => $model->uri], ['class' => 'btn btn-primary']); ?>
-            <?= Html::a(Yii::t('app', 'Add Document'), 
+            <?=
+            Html::a(Yii::t('app', 'Add Document'),
                     [
-                        'document/create', 
-                        'concernedItemUri' => $model->uri, 
-                        'concernedItemLabel' => $model->alias, 
+                        'document/create',
+                        'concernedItemUri' => $model->uri,
+                        'concernedItemLabel' => $model->alias,
                         'concernedItemRdfType' => Yii::$app->params["Experiment"],
                         YiiDocumentModel::RETURN_URL => Url::current()
-                    ], 
-                    ['class' => $dataDocumentsProvider->getCount() > 0 ? 'btn btn-success' : 'btn btn-warning']) ?>            
+                    ],
+                    ['class' => $dataDocumentsProvider->getCount() > 0 ? 'btn btn-success' : 'btn btn-warning'])
+            ?>            
             <?= EventButtonWidget::widget([EventButtonWidget::CONCERNED_ITEMS_URIS => [$model->uri]]); ?>
             <?= AnnotationButtonWidget::widget([AnnotationButtonWidget::TARGETS => [$model->uri]]); ?>
             <?php
         }
         ?>
-        
-        <?= Html::a(Yii::t('app', 'Map Visualization'), 
-                ['layer/view', 'objectURI' => $model->uri, 'objectType' => 'http://www.opensilex.org/vocabulary/oeso#Experiment', 'depth' => 'true', 'generateFile' => 'false', 'objectLabel' => $model->alias], ['class' => 'btn btn-info']) ?>
-        </p>
+
+        <?= Html::a(Yii::t('app', 'Map Visualization'),
+                ['layer/view', 'objectURI' => $model->uri, 'objectType' => 'http://www.opensilex.org/vocabulary/oeso#Experiment', 'depth' => 'true', 'generateFile' => 'false', 'objectLabel' => $model->alias], ['class' => 'btn btn-info'])
+        ?>
+    </p>
 
     <?php
     $attributes;
@@ -133,8 +136,8 @@ $this->params['breadcrumbs'][] = $this->title;
             'keywords',
             [
                 'attribute' => 'comment',
-                'contentOptions' => ['class' => 'multi-line'], 
-            ],                    
+                'contentOptions' => ['class' => 'multi-line'],
+            ],
             [
                 'attribute' => 'groups',
                 'format' => 'raw',
@@ -155,15 +158,18 @@ $this->params['breadcrumbs'][] = $this->title;
                 'format' => 'raw',
                 'value' => function ($model) use ($variables) {
                     return LinkObjectsWidget::widget([
-                        "uri" => $model->uri,
-                        "updateLinksAjaxCallUrl" => Url::to(['experiment/update-variables']),
-                        "items" => $variables,
-                        "actualItems" => is_array($model->variables) ? array_keys($model->variables) : [],
-                        "itemViewRoute" => "variable/view",
-                        "conceptLabel" => "measured variables",
-                        "canUpdate" => true,
-                        "updateMessage" => Yii::t('app', 'Update measured variables'),
-                        "infoMessage" => Yii::t('app/messages', 'When you change measured variables in the list, click on the check button to update them.')
+                                "uri" => $model->uri,
+                                "updateLinksAjaxCallUrl" => Url::to(['experiment/update-variables']),
+                                "items" => $variables,
+                                "actualItems" => is_array($model->variables) ? array_keys($model->variables) : [],
+                                "itemViewRoute" => "variable/view",
+                                "conceptLabel" => "measured variables",
+                                "extraLink" => function($uri) {
+                                    return '<a class="fa  fa-bar-chart" onclick="openGraph(event, \\\'' . $uri . '\\\')"> </>';
+                                },
+                                "canUpdate" => true,
+                                "updateMessage" => Yii::t('app', 'Update measured variables'),
+                                "infoMessage" => Yii::t('app/messages', 'When you change measured variables in the list, click on the check button to update them.')
                     ]);
                 }
             ],
@@ -172,15 +178,15 @@ $this->params['breadcrumbs'][] = $this->title;
                 'format' => 'raw',
                 'value' => function ($model) use ($sensors) {
                     return LinkObjectsWidget::widget([
-                        "uri" => $model->uri,
-                        "updateLinksAjaxCallUrl" => Url::to(['experiment/update-sensors']),
-                        "items" => $sensors,
-                        "actualItems" => is_array($model->sensors) ? array_keys($model->sensors) : [],
-                        "itemViewRoute" => "sensor/view",
-                        "conceptLabel" => "sensors",
-                        "canUpdate" => true,
-                        "updateMessage" => Yii::t('app', 'Update sensors'),
-                        "infoMessage" => Yii::t('app/messages', 'When you change sensors in the list, click on the check button to update them.')
+                                "uri" => $model->uri,
+                                "updateLinksAjaxCallUrl" => Url::to(['experiment/update-sensors']),
+                                "items" => $sensors,
+                                "actualItems" => is_array($model->sensors) ? array_keys($model->sensors) : [],
+                                "itemViewRoute" => "sensor/view",
+                                "conceptLabel" => "sensors",
+                                "canUpdate" => true,
+                                "updateMessage" => Yii::t('app', 'Update sensors'),
+                                "infoMessage" => Yii::t('app/messages', 'When you change sensors in the list, click on the check button to update them.')
                     ]);
                 }
             ]
@@ -249,15 +255,15 @@ $this->params['breadcrumbs'][] = $this->title;
                 'format' => 'raw',
                 'value' => function ($model) use ($variables) {
                     return LinkObjectsWidget::widget([
-                        "uri" => $model->uri,
-                        "updateLinksAjaxCallUrl" => Url::to(['experiment/update-variables']),
-                        "items" => $variables,
-                        "actualItems" => is_array($model->variables) ? array_keys($model->variables) : [],
-                        "itemViewRoute" => "variable/view",
-                        "conceptLabel" => "measured variables",
-                        "canUpdate" => false,
-                        "updateMessage" => Yii::t('app', 'Update measured variables'),
-                        "infoMessage" => Yii::t('app/messages', 'When you change measured variables in the list, click on the check button to update them.')
+                                "uri" => $model->uri,
+                                "updateLinksAjaxCallUrl" => Url::to(['experiment/update-variables']),
+                                "items" => $variables,
+                                "actualItems" => is_array($model->variables) ? array_keys($model->variables) : [],
+                                "itemViewRoute" => "variable/view",
+                                "conceptLabel" => "measured variables",
+                                "canUpdate" => false,
+                                "updateMessage" => Yii::t('app', 'Update measured variables'),
+                                "infoMessage" => Yii::t('app/messages', 'When you change measured variables in the list, click on the check button to update them.')
                     ]);
                 }
             ],
@@ -266,15 +272,15 @@ $this->params['breadcrumbs'][] = $this->title;
                 'format' => 'raw',
                 'value' => function ($model) use ($sensors) {
                     return LinkObjectsWidget::widget([
-                        "uri" => $model->uri,
-                        "updateLinksAjaxCallUrl" => Url::to(['experiment/update-sensors']),
-                        "items" => $sensors,
-                        "actualItems" => is_array($model->sensors) ? array_keys($model->sensors) : [],
-                        "itemViewRoute" => "sensor/view",
-                        "conceptLabel" => "sensors",
-                        "canUpdate" => false,
-                        "updateMessage" => Yii::t('app', 'Update sensors'),
-                        "infoMessage" => Yii::t('app/messages', 'When you change sensors in the list, click on the check button to update them.')
+                                "uri" => $model->uri,
+                                "updateLinksAjaxCallUrl" => Url::to(['experiment/update-sensors']),
+                                "items" => $sensors,
+                                "actualItems" => is_array($model->sensors) ? array_keys($model->sensors) : [],
+                                "itemViewRoute" => "sensor/view",
+                                "conceptLabel" => "sensors",
+                                "canUpdate" => false,
+                                "updateMessage" => Yii::t('app', 'Update sensors'),
+                                "infoMessage" => Yii::t('app/messages', 'When you change sensors in the list, click on the check button to update them.')
                     ]);
                 }
             ]
@@ -286,22 +292,142 @@ $this->params['breadcrumbs'][] = $this->title;
         'attributes' => $attributes
     ]);
     ?>
-    
-    <?= EventGridViewWidget::widget(
+
+    <script>
+        var rootUrl = "<?= Url::to(['experiment/get-provenances']); ?>";
+        rootUrl += "&experiment=" + encodeURIComponent("<?= $model->uri ?>");
+        var currentVariable = null;
+        var openGraph = function (event, variableUrl) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            $("#graph-overlay-content").hide();
+            $("#graph-overlay-loader").show();
+            $("#graph-overlay").show();
+
+            currentVariable = variableUrl;
+            var getProvenancesUrl = rootUrl + "&variable=" + encodeURIComponent(variableUrl);
+            $.getJSON(getProvenancesUrl, function (provenances) {
+                
+                $("select#provenance-selector").empty();
+                $("select#provenance-selector").append($("<option>")
+                    .val("")
+                    .html("")
+                );
+                for (var i in provenances) {
+                    var provenance = provenances[i];
+                    
+                    $("select#provenance-selector").append($("<option>")
+                        .val(provenance.uri)
+                        .html(provenance.label)
+                    );
+                }
+
+                $("#graph-overlay-result").hide();
+                if (provenances.length == 0) {
+                    $("#graph-overlay-no-result").show();
+                } else {
+                    $("#graph-overlay-no-result").hide();
+                }
+                
+                $("#graph-overlay-loader").hide();
+                $("#graph-overlay-content").show();
+            })
+
+            return false;
+        }
+
+        $(document).ready(function () {
+            $("#graph-overlay-close").click(function () {
+                $("#graph-overlay").hide();
+            });
+
+            $("#graph-overlay-no-result a").click(function () {
+                $("#graph-overlay").hide();
+            });
+            
+            $("#graph-overlay").click(function () {
+                $("#graph-overlay").hide();
+            });
+
+            $("#graph-overlay-content").click(function (e) {
+                e.stopPropagation();
+                e.preventDefault();
+            });
+            /*
+            $("#test-load").click(function() {
+                currentVariable = "http://www.phenome-fppn.fr/diaphen/id/variables/v002";
+                var provenance = "http://www.phenome-fppn.fr/diaphen/id/provenance/1555686456348";
+                
+                var startDate = "<?= $model->startDate ?>";
+                var endDate = "<?= $model->endDate ?>";
+                
+                var getGraphUrl = "<?= Url::to(['experiment/get-variable-graph']); ?>";
+                
+                $.post(getGraphUrl, {
+                    provenance: provenance,
+                    variable: currentVariable,
+                    startDate: startDate,
+                    endDate: endDate
+                }, function(html) {
+                    $("#graph-overlay-no-result").hide();
+                    $("#graph-overlay-result").html(html).show();
+                })
+            })
+            */
+            $("select#provenance-selector").change(function() {
+                var provenance = $(this).val();
+                
+                var startDate = "<?= $model->startDate ?>";
+                var endDate = "<?= $model->endDate ?>";
+                
+                var getGraphUrl = "<?= Url::to(['experiment/get-variable-graph']); ?>";
+                
+                $.post(getGraphUrl, {
+                    provenance: provenance,
+                    variable: currentVariable,
+                    startDate: startDate,
+                    endDate: endDate
+                }, function(html) {
+                    $("#graph-overlay-no-result").hide();
+                    $("#graph-overlay-result").html(html).show();
+                })
+            })
+        });
+    </script>
+    <div id="graph-overlay">
+        <div id="graph-overlay-loader" class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+        <div id="graph-overlay-content">
+            <?=
+            Select2::widget([
+                'id' => 'provenance-selector',
+                'name' => 'provenance-selector',
+                'options' => ['multiple' => false, 'placeholder' => 'Select provenance ...']
+            ]);
+            ?>
+            <div id="graph-overlay-result"></div>
+            <div id="graph-overlay-no-result"><a>No result found (click to close)</a></div>
+            <!--<button id="test-load">Try</button>-->
+        </div>
+    </div>
+
+    <?=
+    EventGridViewWidget::widget(
             [
-                 EventGridViewWidget::DATA_PROVIDER => ${ExperimentController::EVENT_PROVIDER}
+                EventGridViewWidget::DATA_PROVIDER => ${ExperimentController::EVENT_PROVIDER}
             ]
-        ); 
+    );
     ?>
-        
+
     <!-- Experiment linked Annotation-->
-    <?= AnnotationGridViewWidget::widget(
+    <?=
+    AnnotationGridViewWidget::widget(
             [
-                 AnnotationGridViewWidget::ANNOTATIONS => ${ExperimentController::ANNOTATION_PROVIDER}
+                AnnotationGridViewWidget::ANNOTATIONS => ${ExperimentController::ANNOTATION_PROVIDER}
             ]
-        ); 
+    );
     ?>
-    
+
     <?php
     if ($dataDocumentsProvider->getCount() > 0) {
         echo "<h3>" . Yii::t('app', 'Linked Documents') . "</h3>";

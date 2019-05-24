@@ -82,6 +82,8 @@ class LinkObjectsWidget extends \yii\base\Widget {
      */
     public $updateMessage;
     
+    public $extraLink = null;
+    
     const ITEM_SELECTOR_CLASS = "items-selector";
     const UPDATE_ITEMS_CLASS = "update-items";
     
@@ -139,9 +141,23 @@ class LinkObjectsWidget extends \yii\base\Widget {
             ) . "',";
         }
         $templateSelectionFunction[] = "};";
+        
+        $templateSelectionFunction[] = "var itemsExtraLink = {";
+        if ($this->extraLink != null) {
+            foreach ($this->items as $uri => $label) {
+                $templateSelectionFunction[] = "'" . $uri . "':'" . call_user_func($this->extraLink, $uri) . "',";
+            }
+        }
+        $templateSelectionFunction[] = "};";
+        
+        $templateSelectionFunction[] = "var extraLink = '';";
+        $templateSelectionFunction[] = "if (itemsExtraLink.hasOwnProperty(obj.id)) {";
+        $templateSelectionFunction[] = "extraLink = '&nbsp;' + itemsExtraLink[obj.id]";
+        $templateSelectionFunction[] = "}";
+        
         // If the item id is present in the generated map return the text with the "eye" link to the corresponding view
         $templateSelectionFunction[] = "if (itemsLinks.hasOwnProperty(obj.id)) {";
-        $templateSelectionFunction[] = "return obj.text + '&nbsp;' + itemsLinks[obj.id] + '&nbsp;'";
+        $templateSelectionFunction[] = "return obj.text + '&nbsp;' + itemsLinks[obj.id] + extraLink + '&nbsp;'";
         $templateSelectionFunction[] = "} else {";
         // Otherwise return only the text (classic rendering)
         $templateSelectionFunction[] = "return obj.text";
@@ -179,7 +195,7 @@ class LinkObjectsWidget extends \yii\base\Widget {
                 ]
             ]
         ];
-
+        
         // Define specific options either user can update or not
         if ($this->canUpdate) {
             $widgetOptions['addon']['append'] = [
