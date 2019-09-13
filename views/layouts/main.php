@@ -459,7 +459,7 @@ ToastrAsset::register($this);
                             visibility: "hidden"
                         });
                         // Refresh cookie value
-                        Cookies.set("<?= WSConstants::TOKEN_COOKIE_TIMEOUT ?>", jsonData.tokenTimeout);
+                        Cookies.set("<?= WSConstants::TOKEN_COOKIE_TIMEOUT ?>", jsonData.tokenTimeout, { path: '/<?= \config::path()['appli'] ?>' });
                         // Refresh login form overlay timer
                         setOverlayTimer();
                     } else {

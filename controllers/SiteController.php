@@ -11,6 +11,8 @@ use app\models\yiiModels\ContactForm;
 use app\models\yiiModels\YiiUserModel;
 use \app\models\wsModels\WSConstants;
 
+require_once '../config/config.php';
+
 class SiteController extends Controller
 {
     /**
@@ -159,7 +161,10 @@ class SiteController extends Controller
         // Remove cookie containing token timeout
         setcookie(
             WSConstants::TOKEN_COOKIE_TIMEOUT,
-            null
+            null,
+            1,
+            '/' . \config::path()['appli']
+                
         );
 
         return $this->redirect(Yii::$app->urlManager->createUrl("site/index"));

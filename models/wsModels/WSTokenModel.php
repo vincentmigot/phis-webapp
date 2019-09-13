@@ -14,6 +14,7 @@
 
 namespace app\models\wsModels;
 
+include_once '../config/config.php';
 include_once '../config/web_services.php';
 include_once '../models/wsModels/WSConstants.php';
 
@@ -62,7 +63,7 @@ class WSTokenModel extends \openSILEX\guzzleClientPHP\WSModel {
                 WSConstants::TOKEN_COOKIE_TIMEOUT,
                 $tokenTimeout,
                 time() + $delay,
-                '/'
+                '/' . \config::path()['appli']
             );
             
            return $requestRes->{WSConstants::ACCESS_TOKEN};
