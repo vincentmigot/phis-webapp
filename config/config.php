@@ -17,8 +17,8 @@ class config {
     
     public static function path() {
 
-        $appli = 'test-modularity';
-        $hostname = '138.102.159.37';
+        $appli = 'opensilex';
+        $hostname = 'localhost';
         $basePath = $appli.'/web';
         
         return [
